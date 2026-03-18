@@ -1,0 +1,30 @@
+name: Infra synth
+
+on:
+  push:
+    paths:
+      - 'infra/**'
+      - '.github/workflows/infra-synth.yml'
+
+jobs:
+  synth:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install infra dependencies
+        run: |
+          cd infra
+          npm ci
+
+      - name: CDK synth
+        run: |
+          cd infra
+          npx cdk synth
